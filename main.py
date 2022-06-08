@@ -5,17 +5,29 @@ import time
 
 os.system('color')
 
-active_game = [1, 0, 0, 2, 0, 0, 3, 0, 0,
-               4, 0, 0, 5, 0, 0, 6, 0, 0,
-               7, 0, 0, 8, 0, 0, 9, 0, 0,
+active_game = [0, 3, 7,   1, 0, 6,   4, 9, 8,
+               1, 2, 0,   8, 9, 0,   3, 7, 0,
+               8, 0, 9,   3, 4, 7,   0, 2, 5,
 
-               1, 0, 0, 2, 0, 0, 3, 0, 0,
-               4, 0, 0, 5, 0, 0, 6, 0, 0,
-               7, 0, 0, 8, 0, 0, 9, 0, 0,
+               0, 8, 3,   0, 5, 4,   2, 0, 9,
+               2, 4, 0,   6, 3, 0,   0, 8, 7,
+               9, 0, 5,   2, 1, 8,   6, 4, 3,
 
-               1, 0, 0, 2, 0, 0, 3, 0, 0,
-               4, 0, 0, 5, 0, 0, 6, 0, 0,
-               7, 0, 0, 8, 0, 0, 9, 0, 0]
+               0, 1, 8,   0, 6, 3,   9, 0, 2,
+               3, 0, 2,   9, 0, 1,   7, 6, 4,
+               4, 9, 0,   5, 7, 2,   0, 3, 1]
+
+active_game_solution = [5, 3, 7,   1, 2, 6,   4, 9, 8,
+                        1, 2, 4,   8, 9, 5,   3, 7, 6,
+                        8, 6, 9,   3, 4, 7,   1, 2, 5,
+
+                        6, 8, 3,   7, 5, 4,   2, 1, 9,
+                        2, 4, 1,   6, 3, 9,   5, 8, 7,
+                        9, 7, 5,   2, 1, 8,   6, 4, 3,
+
+                        7, 1, 8,   4, 6, 3,   9, 5, 2,
+                        3, 5, 2,   9, 8, 1,   7, 6, 4,
+                        4, 9, 6,   5, 7, 2,   8, 3, 1]
 
 
 class Colors:
@@ -30,9 +42,15 @@ class Colors:
 def print_sud(lst: list, hailait: int):
     for i in range(0, 81):
         if i == hailait - 1:
-            sys.stdout.write(Colors.reversd + str(lst[i]) + Colors.reset + ' ')
+            if lst[i] == 0:
+                sys.stdout.write(Colors.reversd + " " + Colors.reset + ' ')
+            else:
+                sys.stdout.write(Colors.reversd + str(lst[i]) + Colors.reset + ' ')
         else:
-            sys.stdout.write(str(lst[i]) + " ")
+            if lst[i] == 0:
+                sys.stdout.write("  ")
+            else:
+                sys.stdout.write(str(lst[i]) + " ")
         if i % 27 == 26:
             if not i == 80:
                 sys.stdout.write("\n" + ("-" * 21) + "\n")
@@ -53,6 +71,13 @@ sel = 0
 
 running = True
 while running:
+    if active_game == active_game_solution:
+        print(Colors.lineup + Colors.lineup + Colors.brightGreen + "\033[KCongratulations, you won!" + Colors.reset)
+        print("\033[K" + Colors.brightRed + 'Now Exiting...' + Colors.reset + '\n')
+        time.sleep(5)
+        running = False
+        continue
+
     command = input(Colors.lineup + Colors.lineup + "\033[2KPlease enter command: ")
     command = command.split()
 
@@ -60,6 +85,7 @@ while running:
         print("\033[K" + Colors.brightRed + "Exiting" + Colors.reset)
         time.sleep(2)
         running = False
+        continue
 
     elif command[0] == "select":
         try:
