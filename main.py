@@ -2,8 +2,15 @@ import sys
 import os
 import time
 import random
+import tkinter
+from tkinter import *
+from tkinter import ttk
 
 os.system('color')
+
+# init window
+window = Tk()
+
 
 all_games = [[0, 3, 7, 1, 0, 6, 4, 9, 8,
               1, 2, 0, 8, 9, 0, 3, 7, 0,
@@ -76,6 +83,30 @@ def print_sud(lst: list, hailait: int):
 print_sud(active_game, 0)
 print("\n\n\n")
 
+x = 0
+for i in range(0, 9):
+    for j in range(0, 9):
+        frame = tkinter.Frame(
+            master=window,
+            relief=tkinter.RAISED,
+            borderwidth=1
+        )
+
+        frame.grid(row=i, column=j)
+        if active_game[x] == 0:
+            label = tkinter.Entry(master=frame, width=3, justify="center")
+            label.insert(0, " ")
+            label.pack()
+            x += 1
+        else:
+            label = tkinter.Entry(master=frame, width=3, justify="center")
+            label.insert(0, str(active_game[x]))
+            label.pack()
+            x += 1
+
+window.mainloop()
+
+
 running = True
 while running:
     command = input(Colors.lineup + Colors.lineup + "\033[2KPlease enter command: ")
@@ -89,7 +120,7 @@ while running:
     if command[0] == "next":
         if finished:
             finished = False
-            game = random.randint(0, 0)
+            game = random.randint(0, len(all_games) - 1)
             active_game = all_games[game]
             active_game_solution = all_games_solution[game]
             continue
