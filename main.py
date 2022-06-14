@@ -1,33 +1,33 @@
-import logging
 import sys
 import os
 import time
+import random
 
 os.system('color')
 
-active_game = [0, 3, 7,   1, 0, 6,   4, 9, 8,
-               1, 2, 0,   8, 9, 0,   3, 7, 0,
-               8, 0, 9,   3, 4, 7,   0, 2, 5,
+all_games = [[0, 3, 7, 1, 0, 6, 4, 9, 8,
+              1, 2, 0, 8, 9, 0, 3, 7, 0,
+              8, 0, 9, 3, 4, 7, 0, 2, 5,
 
-               0, 8, 3,   0, 5, 4,   2, 0, 9,
-               2, 4, 0,   6, 3, 0,   0, 8, 7,
-               9, 0, 5,   2, 1, 8,   6, 4, 3,
+              0, 8, 3, 0, 5, 4, 2, 0, 9,
+              2, 4, 0, 6, 3, 0, 0, 8, 7,
+              9, 0, 5, 2, 1, 8, 6, 4, 3,
 
-               0, 1, 8,   0, 6, 3,   9, 0, 2,
-               3, 0, 2,   9, 0, 1,   7, 6, 4,
-               4, 9, 0,   5, 7, 2,   0, 3, 1]
+              0, 1, 8, 0, 6, 3, 9, 0, 2,
+              3, 0, 2, 9, 0, 1, 7, 6, 4,
+              4, 9, 0, 5, 7, 2, 0, 3, 1]]
 
-active_game_solution = [5, 3, 7,   1, 2, 6,   4, 9, 8,
-                        1, 2, 4,   8, 9, 5,   3, 7, 6,
-                        8, 6, 9,   3, 4, 7,   1, 2, 5,
+all_games_solution = [[5, 3, 7, 1, 2, 6, 4, 9, 8,
+                       1, 2, 4, 8, 9, 5, 3, 7, 6,
+                       8, 6, 9, 3, 4, 7, 1, 2, 5,
 
-                        6, 8, 3,   7, 5, 4,   2, 1, 9,
-                        2, 4, 1,   6, 3, 9,   5, 8, 7,
-                        9, 7, 5,   2, 1, 8,   6, 4, 3,
+                       6, 8, 3, 7, 5, 4, 2, 1, 9,
+                       2, 4, 1, 6, 3, 9, 5, 8, 7,
+                       9, 7, 5, 2, 1, 8, 6, 4, 3,
 
-                        7, 1, 8,   4, 6, 3,   9, 5, 2,
-                        3, 5, 2,   9, 8, 1,   7, 6, 4,
-                        4, 9, 6,   5, 7, 2,   8, 3, 1]
+                       7, 1, 8, 4, 6, 3, 9, 5, 2,
+                       3, 5, 2, 9, 8, 1, 7, 6, 4,
+                       4, 9, 6, 5, 7, 2, 8, 3, 1]]
 
 
 class Colors:
@@ -37,6 +37,15 @@ class Colors:
     reset = '\u001b[0m'
     lineup = '\033[A'
     linedown = '\033[B'
+
+
+# Variables
+sel = 0
+
+finished = False
+game = random.randint(0, 0)
+active_game = all_games[game]
+active_game_solution = all_games_solution[game]
 
 
 def print_sud(lst: list, hailait: int):
@@ -67,19 +76,26 @@ def print_sud(lst: list, hailait: int):
 print_sud(active_game, 0)
 print("\n\n\n")
 
-sel = 0
-
 running = True
 while running:
-    if active_game == active_game_solution:
-        print(Colors.lineup + Colors.lineup + Colors.brightGreen + "\033[KCongratulations, you won!" + Colors.reset)
-        print("\033[K" + Colors.brightRed + 'Now Exiting...' + Colors.reset + '\n')
-        time.sleep(5)
-        running = False
-        continue
-
     command = input(Colors.lineup + Colors.lineup + "\033[2KPlease enter command: ")
     command = command.split()
+
+    if command[0] == "check":
+        if active_game == active_game_solution:
+            print(Colors.lineup + Colors.lineup + Colors.brightGreen + "\033[KCongratulations, you won!" + Colors.reset)
+            finished = True
+            continue
+    if command[0] == "next":
+        if finished:
+            finished = False
+            game = random.randint(0, 0)
+            active_game = all_games[game]
+            active_game_solution = all_games_solution[game]
+            continue
+        else:
+            sys.stdout.write("\033[K" + Colors.brightRed + "Please finish the Sudoku first\n" + Colors.reset)
+            continue
 
     if command[0] == "exit":
         print("\033[K" + Colors.brightRed + "Exiting" + Colors.reset)
@@ -94,7 +110,8 @@ while running:
                 print_sud(active_game, int(command[1]))
                 sel = int(command[1])
                 print(Colors.linedown * 2)
-                print("\033[K" + Colors.brightGreen + 'Position ' + str(command[1]) + ' successfully selected' + Colors.reset)
+                print("\033[K" + Colors.brightGreen + 'Position ' + str(
+                    command[1]) + ' successfully selected' + Colors.reset)
             else:
                 sys.stdout.write("\033[K" + Colors.brightRed + 'No position ' + str(command[1]) + Colors.reset + '\n')
         except ValueError:
@@ -102,17 +119,19 @@ while running:
 
     elif command[0] == "set":
         if sel != 0:
-            if 0 < int(command[1]) < 10:
+            if 0 <= int(command[1]) <= 9:
                 active_game.pop(sel - 1)
                 active_game.insert(sel - 1, int(command[1]))
                 os.system('cls')
                 print_sud(active_game, 0)
                 print(Colors.linedown * 2)
-                print("\033[K" + Colors.brightGreen + 'Position ' + str(sel) + ' successfully changed to: ' + str(command[1]) + Colors.reset)
+                print("\033[K" + Colors.brightGreen + 'Position ' + str(sel) + ' successfully changed to: ' + str(
+                    command[1]) + Colors.reset)
                 sel = 0
 
             else:
-                sys.stdout.write("\033[K" + Colors.brightRed + 'Please select a number from 1 to 9' + Colors.reset + '\n')
+                sys.stdout.write(
+                    "\033[K" + Colors.brightRed + 'Please select a number from 1 to 9' + Colors.reset + '\n')
         else:
             sys.stdout.write("\033[K" + Colors.brightRed + 'No position selected' + Colors.reset + '\n')
 
