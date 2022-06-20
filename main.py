@@ -84,25 +84,40 @@ print_sud(active_game, 0)
 print("\n\n\n")
 
 x = 0
-for i in range(0, 9):
-    for j in range(0, 9):
-        frame = tkinter.Frame(
-            master=window,
-            relief=tkinter.RAISED,
-            borderwidth=1
-        )
+for i in range(11):
+    for j in range(11):
+        if i == 3 or i == 7:
+            frame = tkinter.Frame(
+                master=window,
+                relief=tkinter.RAISED,
+                borderwidth=1
+            )
+            frame.grid(row=i, column=j)
+            line = tkinter.Label(master=frame, width=3, justify="center", text="---", borderwidth=0)
+            line.pack()
 
-        frame.grid(row=i, column=j)
-        if active_game[x] == 0:
-            label = tkinter.Entry(master=frame, width=3, justify="center")
-            label.insert(0, " ")
-            label.pack()
-            x += 1
         else:
-            label = tkinter.Entry(master=frame, width=3, justify="center")
-            label.insert(0, str(active_game[x]))
-            label.pack()
-            x += 1
+            frame = tkinter.Frame(
+                    master=window,
+                    relief=tkinter.RAISED,
+                    borderwidth=1
+                )
+
+            frame.grid(row=i, column=j)
+            if j == 3 or j == 7:
+                frame.grid(row=i, column=j)
+                line = tkinter.Label(master=frame, width=3, justify="center", text="|", borderwidth=0)
+                line.pack()
+            elif active_game[x] == 0:
+                label = tkinter.Entry(master=frame, width=3, justify="center")
+                label.insert(0, " ")
+                label.pack()
+                x += 1
+            else:
+                label = tkinter.Label(master=frame, width=3, justify="center", text=str(active_game[x]))
+                label.pack()
+                x += 1
+
 
 window.mainloop()
 
