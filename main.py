@@ -93,28 +93,28 @@ for i in range(11):
                 borderwidth=1
             )
             frame.grid(row=i, column=j)
-            line = tkinter.Label(master=frame, width=3, justify="center", text="---", borderwidth=0)
+            line = tkinter.Label(master=frame, width=12, height=0, justify="center", text="----------", background="black", borderwidth=0)
             line.pack()
 
         else:
             frame = tkinter.Frame(
                     master=window,
                     relief=tkinter.RAISED,
-                    borderwidth=1
+                    borderwidth=0
                 )
 
             frame.grid(row=i, column=j)
             if j == 3 or j == 7:
                 frame.grid(row=i, column=j)
-                line = tkinter.Label(master=frame, width=3, justify="center", text="|", borderwidth=0)
+                line = tkinter.Label(master=frame, width=2, height=4, justify="center", text="|", borderwidth=0, background="black")
                 line.pack()
             elif active_game[x] == 0:
-                label = tkinter.Entry(master=frame, width=3, justify="center")
+                label = tkinter.Entry(master=frame, width=3, justify="center", font="Arial 25")
                 label.insert(0, " ")
                 label.pack()
                 x += 1
             else:
-                label = tkinter.Label(master=frame, width=3, justify="center", text=str(active_game[x]))
+                label = tkinter.Label(master=frame, width=3, justify="center", font="Arial 25", text=str(active_game[x]))
                 label.pack()
                 x += 1
 
